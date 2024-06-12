@@ -1,85 +1,56 @@
 /* eslint-disable no-console */
-import { type Database } from 'better-sqlite3'
-import database from '.'
-import * as createArticleTable from './migrations/20231007T071828Z-createArticleTable'
+import 'dotenv/config'
+import * as path from 'node:path'
+import fs from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
+import SQLite, { type Database } from 'better-sqlite3'
+import { Kysely, Migrator, SqliteDialect, FileMigrationProvider } from 'kysely'
 
-const MIGRATIONS_TABLE = 'migrations'
+const { DATABASE_URL } = process.env
+const MIGRATIONS_PATH = './migrations'
 
-// To make our example very simple, we are not
-// including a down function, which would reverse
-// the changes made by the up function
-type Migration = {
-  timestamp: Date
-  up: (db: Database) => unknown
-}
-
-// Our database will store migrations that have been applied
-// to the database in a table called "migrations".
-// It will compare the migrations that it "remembers"
-// to the migrations that we have listed in our migrations folder.
-type MigrationRecord = {
-  timestamp: string
-}
-
-// our list of migrations, in order
-const migrations: Migration[] = [createArticleTable]
-
-function migrateToLatest(db: Database) {
-  // make sure migrations table exists
-  createMigrationsTable(db)
-
-  const timestamps = getMigratedTimestamps(db)
-
-  // filter out migrations that we already ran
-  const migrationsToRun = migrations.filter(
-    ({ timestamp }) => !timestamps.includes(timestamp.toISOString())
-  )
-
-  if (migrationsToRun.length === 0) {
-    console.info('No migrations to run!')
-    return
+async function migrateToLatest() {
+  if (typeof DATABASE_URL !== 'string') {
+    throw new Error('Provide DATABASE_URL in your environment variables.')
   }
 
-  // run migrations in a transaction
-  db.transaction(() => {
-    migrationsToRun.forEach((migration) => {
-      console.info('Migrating to %s', migration.timestamp)
-      migration.up(db)
-      saveMigration(db, migration.timestamp)
-    })
-  })()
+  const db = new Kysely<Database>({
+    dialect: new SqliteDialect({
+      database: new SQLite(DATABASE_URL),
+    }),
+  })
 
-  console.info('Migrations complete!')
+  const dirname = path.dirname(fileURLToPath(import.meta.url))
+  const migrator = new Migrator({
+    db,
+    provider: new FileMigrationProvider({
+      fs,
+      path,
+      migrationFolder: path.join(dirname, MIGRATIONS_PATH),
+    }),
+  })
+
+  const { error, results } = await migrator.migrateToLatest()
+
+  if (!results?.length) {
+    console.log('No migrations to run.')
+  }
+
+  results?.forEach((it) => {
+    if (it.status === 'Success') {
+      console.info(`Migration "${it.migrationName}" was executed successfully.`)
+    } else if (it.status === 'Error') {
+      console.error(`Failed to execute migration "${it.migrationName}".`)
+    }
+  })
+
+  if (error) {
+    console.error('Failed to migrate.')
+    console.error(error)
+    process.exit(1)
+  }
+
+  await db.destroy()
 }
 
-function createMigrationsTable(db: Database) {
-  const query = `
-    CREATE TABLE IF NOT EXISTS ${MIGRATIONS_TABLE} (
-      timestamp NUMERIC UNIQUE NOT NULL
-    )
-  `
-
-  db.exec(query)
-}
-
-function getMigratedTimestamps(db: Database) {
-  const query = `
-    SELECT timestamp FROM ${MIGRATIONS_TABLE}
-  `
-
-  const migrationsExecuted = db.prepare(query).all() as MigrationRecord[]
-
-  return migrationsExecuted.map(({ timestamp }) => timestamp)
-}
-
-function saveMigration(db: Database, timestamp: Date) {
-  const query = `
-    INSERT INTO ${MIGRATIONS_TABLE} (timestamp)
-    VALUES (?)
-  `
-
-  db.prepare(query).run(timestamp.toISOString())
-}
-
-// run all migrations that have not been run yet
-migrateToLatest(database)
+migrateToLatest()
