@@ -14,6 +14,12 @@ export interface Messages {
   username: string;
 }
 
+export interface Sprints {
+  code: string;
+  id: Generated<number>;
+  title: string;
+}
+
 export interface Templates {
   id: Generated<number>;
   text: string;
@@ -21,5 +27,6 @@ export interface Templates {
 
 export interface DB {
   messages: Messages;
+  sprints: Sprints;
   templates: Templates;
 }
