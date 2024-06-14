@@ -7,7 +7,7 @@ import * as schema from "./schema"
 const router = Router()
 
 router.get("/", async (req, res) => {
-    const parsedInput = schema.parseInput(req.query);
+    const parsedInput = schema.parsePartialInput(req.query);
     const { code, title } = parsedInput;
 
     try {
@@ -45,10 +45,21 @@ router.post("/", async (req, res) => {
 
 router.patch("/:sprintId", async (req, res) => {
     try {
-        const {sprintId} = req.params
-        res.status(200).json({message: `Updated a sprint with sprintId-${sprintId}. This is what was updated ${req.body}`})
+        const id = schema.parseId(req.params.sprintId)
+        const body = schema.parsePartialInput(req.body)
+        const updatedSprint = await sprints.update(id, body)
+
+        if (!updatedSprint) {
+            res.status(400).json({err: "Sprint not found"})
+            return
+        }
+        res.status(200).json(updatedSprint)
     } catch (err) {
-        res.status(500).json({ err: (err as Error).message });
+        if (err instanceof z.ZodError) {
+            res.status(400).json({err: err.errors})
+        } else {
+            res.status(500).json({ err: (err as Error).message });
+        }
     }
 })
 

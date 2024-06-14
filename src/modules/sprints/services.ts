@@ -1,4 +1,4 @@
-import type {Insertable} from "kysely"
+import type {Insertable, Updateable} from "kysely"
 import db, {type Sprints} from "@/database"
 
 type SprintWithoutId = Omit<Sprints, "id">
@@ -30,6 +30,15 @@ export function createSprint(sprintDetails: Insertable<SprintWithoutId>) {
     return db
     .insertInto("sprints")
     .values(sprintDetails)
+    .returningAll()
+    .executeTakeFirst()
+}
+
+export function update(id: number, details: Updateable<SprintWithoutId>) {
+    return db
+    .updateTable("sprints")
+    .set(details)
+    .where("id", "=", id)
     .returningAll()
     .executeTakeFirst()
 }
