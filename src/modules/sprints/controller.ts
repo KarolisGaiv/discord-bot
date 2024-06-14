@@ -1,10 +1,13 @@
 import { Router } from "express";
+import * as sprints from "./services"
+import * as schema from "./schema"
 
 const router = Router()
 
 router.get("/", async (req, res) => {
     try {
-        res.status(200).json({message: "Fetched all sprint information"})
+        const sprintList = await sprints.findAllSprints()
+        res.status(200).json(sprintList)
     } catch (err) {
         res.status(500).json({ err: (err as Error).message });
     }
