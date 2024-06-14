@@ -1,4 +1,4 @@
-import type { Insertable } from "kysely"
+import type {Insertable} from "kysely"
 import db, {type Sprints} from "@/database"
 
 type SprintWithoutId = Omit<Sprints, "id">
@@ -24,4 +24,12 @@ export function findSprintByTitle(sprintTitle: string) {
     .selectAll()
     .where("title", "=", sprintTitle)
     .execute()
+}
+
+export function createSprint(sprintDetails: Insertable<SprintWithoutId>) {
+    return db
+    .insertInto("sprints")
+    .values(sprintDetails)
+    .returningAll()
+    .executeTakeFirst()
 }

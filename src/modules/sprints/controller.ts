@@ -35,8 +35,9 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const {code, title} = req.body
-        res.status(200).json({message: `These are details for new sprint: sprint code - ${code} and sprint title - ${title}`})
+        const body = schema.parseNewSprintInput(req.body)
+        const newSprint = await sprints.createSprint(body)
+        res.status(200).json(newSprint)
     } catch (err) {
         res.status(500).json({ err: (err as Error).message });
     }

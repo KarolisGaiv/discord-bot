@@ -8,3 +8,4 @@ const schema = z.object({
 const PartialSprint = schema.partial()
 
 export const parseInput = (input: unknown) => PartialSprint.parse(input)
+export const parseNewSprintInput = (input: unknown) => schema.parse(input)
