@@ -9,5 +9,5 @@ export function findByUserId(userName: string) {
     .selectFrom("messages")
     .selectAll()
     .where("username", "=", userName)
-    .executeTakeFirst()
+    .execute()
 }

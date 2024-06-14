@@ -11,7 +11,8 @@ router.get("/", async (req, res) => {
         if (userName) {
             // Fetch messages for the specific user from the database
             console.log("Fetching messages for user:", userName);
-            res.status(200).json({ message: `Fetched messages for user ${userName} successfully.` });
+            const messagesList = await messages.findByUserId(userName)
+            res.status(200).json(messagesList);
         } else if (sprintId) {
             // Fetch messages for the specific sprint from the database
             console.log("Fetching messages for sprint:", sprintId);
