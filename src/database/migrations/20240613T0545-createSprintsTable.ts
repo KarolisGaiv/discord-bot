@@ -6,7 +6,6 @@ export async function up(db: Kysely<SqliteDatabase>) {
       .addColumn('id', 'integer', (c) => c.primaryKey().autoIncrement().notNull())
       .addColumn('code', 'text', (c) => c.notNull())
       .addColumn('title', 'text', (c) => c.notNull())
-      .addUniqueConstraint('unique_code', ['code'])
       .execute()
   }
   
