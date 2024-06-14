@@ -6,21 +6,25 @@ const router = Router()
 
 router.get("/", async (req, res) => {
     try {
-        const sprintList = await sprints.findAllSprints()
-        res.status(200).json(sprintList)
+        const {code, title} = req.query
+
+        if(code) {
+            // fetch sprint by sprint code
+            const sprintInfo = await sprints.findSprintByCode(code as string)
+            res.status(200).json(sprintInfo)
+        } else if (title) {
+            // fetch sprint by title
+            const sprintInfo = await sprints.findSprintByTitle(title as string)
+            res.status(200).json(sprintInfo) 
+        } else {
+            // get all sprints
+            const sprintList = await sprints.findAllSprints()
+            res.status(200).json(sprintList)
+        }
     } catch (err) {
         res.status(500).json({ err: (err as Error).message });
     }
 })
-
-router.get("/:sprintId", async (req, res) => {
-    try {
-        const { sprintId } = req.params; 
-        res.status(200).json({message: `Fetched a sprint content for sprint id-${sprintId}`});
-    } catch (err) {
-        res.status(500).json({ err: (err as Error).message });
-    }
-});
 
 router.post("/", async (req, res) => {
     try {

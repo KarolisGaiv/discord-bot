@@ -9,3 +9,19 @@ export function findAllSprints() {
     .selectAll()
     .execute()
 }
+
+export function findSprintByCode(sprintCode: string) {
+    return db
+    .selectFrom("sprints")
+    .selectAll()
+    .where("code", "=", sprintCode)
+    .execute()
+}
+
+export function findSprintByTitle(sprintTitle: string) {
+    return db
+    .selectFrom("sprints")
+    .selectAll()
+    .where("title", "=", sprintTitle)
+    .execute()
+}
