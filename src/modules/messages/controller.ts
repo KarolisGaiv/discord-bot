@@ -6,12 +6,12 @@ const router = Router()
 // Get all messages or filter by userId or sprintId 
 router.get("/", async (req, res) => {
     try {
-        const { userId, sprintId } = req.query;
+        const { userName, sprintId } = req.query;
 
-        if (userId) {
+        if (userName) {
             // Fetch messages for the specific user from the database
-            console.log("Fetching messages for user:", userId);
-            res.status(200).json({ message: `Fetched messages for user ${userId} successfully.` });
+            console.log("Fetching messages for user:", userName);
+            res.status(200).json({ message: `Fetched messages for user ${userName} successfully.` });
         } else if (sprintId) {
             // Fetch messages for the specific sprint from the database
             console.log("Fetching messages for sprint:", sprintId);
