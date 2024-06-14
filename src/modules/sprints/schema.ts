@@ -1,8 +1,10 @@
 import {z} from "zod"
 
 const schema = z.object({
-    code: z.string(),
-    title: z.string()
+    code: z.string().min(1),
+    title: z.string().min(1)
 })
 
-export const parseInput = (input: unknown) => schema.parse(input)
+const PartialSprint = schema.partial()
+
+export const parseInput = (input: unknown) => PartialSprint.parse(input)

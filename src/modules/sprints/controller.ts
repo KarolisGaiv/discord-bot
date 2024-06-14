@@ -1,14 +1,17 @@
 import { Router } from "express";
+import { z } from "zod";
 import * as sprints from "./services"
 import * as schema from "./schema"
+
 
 const router = Router()
 
 router.get("/", async (req, res) => {
-    try {
-        const {code, title} = req.query
+    const parsedInput = schema.parseInput(req.query);
+    const { code, title } = parsedInput;
 
-        if(code) {
+    try {
+        if (code) {
             // fetch sprint by sprint code
             const sprintInfo = await sprints.findSprintByCode(code as string)
             res.status(200).json(sprintInfo)
@@ -22,7 +25,11 @@ router.get("/", async (req, res) => {
             res.status(200).json(sprintList)
         }
     } catch (err) {
-        res.status(500).json({ err: (err as Error).message });
+        if (err instanceof z.ZodError) {
+            res.status(400).json({err: err.errors})
+        } else {
+            res.status(500).json({ err: (err as Error).message });
+        }
     }
 })
 
