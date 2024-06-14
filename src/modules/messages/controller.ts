@@ -1,4 +1,5 @@
 import { Router } from "express";
+import * as messages from "./service";
 
 const router = Router()
 
@@ -18,7 +19,8 @@ router.get("/", async (req, res) => {
         } else {
             // Fetch all messages from the database
             console.log("Fetching all messages");
-            res.status(200).json({ message: "Fetched all messages successfully." });
+            const messagesList = await messages.findAll()
+            res.status(200).json(messagesList);
         }
     } catch (err) {
         res.status(500).json({ err: (err as Error).message });
