@@ -26,6 +26,14 @@ export function findSprintByTitle(sprintTitle: string) {
     .execute()
 }
 
+export function findSprintById(id: number) {
+    return db
+    .selectFrom("sprints")
+    .selectAll()
+    .where("id", "=", id)
+    .executeTakeFirstOrThrow()
+}
+
 export function createSprint(sprintDetails: Insertable<SprintWithoutId>) {
     return db
     .insertInto("sprints")
@@ -41,4 +49,12 @@ export function update(id: number, details: Updateable<SprintWithoutId>) {
     .where("id", "=", id)
     .returningAll()
     .executeTakeFirst()
+}
+
+export function remove(id: number) {
+    return db
+    .deleteFrom("sprints")
+    .where("id", "=", id)
+    .returningAll()
+    .execute()
 }

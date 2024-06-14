@@ -65,10 +65,22 @@ router.patch("/:sprintId", async (req, res) => {
 
 router.delete("/:sprintId", async (req, res) => {
     try {
-        const {sprintId} = req.params
-        res.status(200).json({message: `SPrint-${sprintId} was deleted`})
+        const id = schema.parseId(req.params.sprintId)
+        const sprintToDelete = await sprints.findSprintById(id)
+
+        if (!sprintToDelete) {
+            res.status(400).json({err: "Sprint not found"})
+            return
+        }
+
+        const deletedSprint = await sprints.remove(id)
+        res.status(200).json(deletedSprint)
     } catch (err) {
-        res.status(500).json({ err: (err as Error).message });
+        if (err instanceof z.ZodError) {
+            res.status(400).json({err: err.errors})
+        } else {
+            res.status(500).json({ err: (err as Error).message });
+        }
     }
 })
 
