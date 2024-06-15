@@ -1,4 +1,4 @@
-import type { Insertable } from "kysely"
+import type { Insertable, Updateable } from "kysely"
 import db, {type Templates} from "@/database"
 
 type TemplateWithoutId = Omit<Templates, "id">
@@ -23,6 +23,15 @@ export function createTemplate(text: Insertable<TemplateWithoutId>) {
     return db
     .insertInto("templates")
     .values(text)
+    .returningAll()
+    .executeTakeFirst()
+}
+
+export function update(id: number, text: Updateable<TemplateWithoutId>) {
+    return db
+    .updateTable("templates")
+    .set(text)
+    .where("id", "=", id)
     .returningAll()
     .executeTakeFirst()
 }

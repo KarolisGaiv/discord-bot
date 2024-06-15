@@ -44,22 +44,25 @@ router.post("/", async (req, res) => {
 
 router.patch("/:templateId", async (req, res) => {
     try {
-        const {templateId} = req.params
-        const updateInfo = req.body
-        res.status(200).json({message: `Updated a template content for template id-${templateId}. This was that was updated: ${updateInfo.message}`})
+        const id = schema.parseId(req.params.templateId)
+        const updatedText = schema.parseText(req.body.text)
+        const updatedSprint = await templates.update(id, updatedText)
+
+        if (!updatedSprint) {
+            res.status(400).json({err: "Template not found"})
+            return
+        }
+        res.status(200).json(updatedSprint)
     } catch (err) {
-        res.status(500).json({ err: (err as Error).message });
+        if (err instanceof z.ZodError) {
+            res.status(400).json({err: err.errors})
+        } else {
+            res.status(500).json({ err: (err as Error).message });
+        }
     }
 })
 
-router.delete("/:templateId", async(req, res) => {
-    try {
-        const templateToDelete = req.params
-        res.status(200).json({message: `Deleted a template id-${templateToDelete}`})
-    } catch (err) {
-        res.status(500).json({ err: (err as Error).message });
-    }
-})
+
 
 
 export default router
