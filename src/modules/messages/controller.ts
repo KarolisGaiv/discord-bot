@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as messages from "./service";
 import * as schema from "./schema"
+import { getGIF } from "../gifService/gifService";
 
 const router = Router()
 
@@ -27,12 +28,16 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Send sucess message to Discord
+// Send success message to Discord
 router.post("/", async (req, res) => {
     try{
-        const body = schema.parseInput(req.body)
-        const newMessage = messages.create(body)
-        res.status(200).json(newMessage)
+        // const body = schema.parseInput(req.body)
+        const gifUrl = await getGIF()
+        console.log(gifUrl);
+
+
+        const newMessage = messages.create(req.body)
+        res.status(200).json(gifUrl)
     } catch(err) {
         res.status(500).json({err: (err as Error).message})
     }

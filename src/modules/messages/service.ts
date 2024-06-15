@@ -1,7 +1,7 @@
 import type { Insertable } from "kysely"
 import db, {type Messages} from "@/database"
 
-type NewMessage = Omit<Messages, "id" | "gifUrl" | "message" | "createdAt">
+// type NewMessage = Omit<Messages, "id" | "gifUrl" | "message" | "createdAt">
 
 export function findAllMessages() {
     return db.selectFrom("messages").selectAll().execute()
@@ -23,7 +23,16 @@ export function findMessagesBySprintCode(sprintCode: string) {
     .execute()
 }
 
-export function create(message: Insertable<NewMessage>) {
+// export function create(message: Insertable<NewMessage>) {
+//     console.log(message);
+//     // return db
+//     // .insertInto("messages")
+//     // .values(message)
+//     // .returningAll()
+//     // .executeTakeFirst()
+// }
+
+export function create(message) {
     console.log(message);
     // return db
     // .insertInto("messages")
