@@ -40,13 +40,13 @@ router.post('/', async (req, res) => {
     // const body = schema.parseInput(req.body)
     const gifUrl = await getGIF();
     const message = await getRandomTemplate();
-    const {title} = await findSprintByCode(req.body.sprintCode)
+    const { title } = await findSprintByCode(req.body.sprintCode);
 
     // Combine the message body with the fetched gifUrl
-     const newMessageData = {
-        ...req.body,
-        message,
-        gifUrl,
+    const newMessageData = {
+      ...req.body,
+      message,
+      gifUrl,
     };
 
     const newMessage = await messages.create(newMessageData);

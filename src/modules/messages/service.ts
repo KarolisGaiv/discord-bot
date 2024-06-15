@@ -25,8 +25,8 @@ export function findMessagesBySprintCode(sprintCode: string) {
 
 export function create(message) {
   return db
-  .insertInto("messages")
-  .values(message)
-  .returningAll()
-  .executeTakeFirst()
+    .insertInto('messages')
+    .values(message)
+    .returningAll()
+    .executeTakeFirst();
 }

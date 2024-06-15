@@ -4,7 +4,11 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const { DISCORD_CLIENT_ID: clientId, DISCORD_GUILD_ID: guildId, DISCORD_TOKEN: token } = process.env;
+const {
+  DISCORD_CLIENT_ID: clientId,
+  DISCORD_GUILD_ID: guildId,
+  DISCORD_TOKEN: token,
+} = process.env;
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -26,7 +30,9 @@ async function loadCommands(dir) {
         if ('data' in command && 'execute' in command) {
           commands.push(command.data.toJSON());
         } else {
-          console.log(`[WARNING] The command at ${fullPath} is missing a required "data" or "execute" property.`);
+          console.log(
+            `[WARNING] The command at ${fullPath} is missing a required "data" or "execute" property.`
+          );
         }
       }
     });
@@ -41,14 +47,18 @@ async function deployCommands() {
   const rest = new REST({ version: '10' }).setToken(token);
 
   try {
-    console.log(`Started refreshing ${commands.length} application (/) commands.`);
+    console.log(
+      `Started refreshing ${commands.length} application (/) commands.`
+    );
 
     const data = await rest.put(
       Routes.applicationGuildCommands(clientId, guildId),
-      { body: commands },
+      { body: commands }
     );
 
-    console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+    console.log(
+      `Successfully reloaded ${data.length} application (/) commands.`
+    );
   } catch (error) {
     console.error('Error reloading application (/) commands:', error);
   }
