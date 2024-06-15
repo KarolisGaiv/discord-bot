@@ -8,6 +8,7 @@
     "dev": "tsx watch src",
     "build": "tsc",
     "bot": "tsx src/bot",
+    "deploy-commands": "npx tsx src/bot/deploy-commands.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
