@@ -3,6 +3,7 @@ import * as messages from './service';
 import * as schema from './schema';
 import { getGIF } from '../gifService/gifService';
 import { getRandomTemplate } from '../message-templates/services';
+import { findSprintByCode } from '../sprints/services';
 
 const router = Router();
 
@@ -35,13 +36,23 @@ router.get('/', async (req, res) => {
 
 // Send success message to Discord
 router.post('/', async (req, res) => {
+    // req.body will contain username and sprintCode
+
+    //1. get random gif - DONE
+    //2. get random message template - DONE
+    //3. get retrieve sprint title based on sprintCode  - DONE
+    //4. send all info to discord bot
+
   try {
     // const body = schema.parseInput(req.body)
     const gifUrl = await getGIF();
-    console.log(gifUrl);
+    // console.log(gifUrl);
 
     const message = await getRandomTemplate();
-    console.log(message);
+    // console.log(message);
+
+    const {title} = await findSprintByCode(req.body.sprintCode)
+    console.log(title);
 
     // Combine the message body with the fetched gifUrl
     //  const newMessageData = {

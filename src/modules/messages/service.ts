@@ -33,7 +33,7 @@ export function findMessagesBySprintCode(sprintCode: string) {
 // }
 
 export function create(message) {
-  console.log(message);
+  console.log("test");
   // return db
   // .insertInto("messages")
   // .values(message)

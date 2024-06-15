@@ -12,7 +12,7 @@ export function findSprintByCode(sprintCode: string) {
     .selectFrom('sprints')
     .selectAll()
     .where('code', '=', sprintCode)
-    .execute();
+    .executeTakeFirstOrThrow();
 }
 
 export function findSprintByTitle(sprintTitle: string) {
@@ -20,7 +20,7 @@ export function findSprintByTitle(sprintTitle: string) {
     .selectFrom('sprints')
     .selectAll()
     .where('title', '=', sprintTitle)
-    .execute();
+    .executeTakeFirstOrThrow();
 }
 
 export function findSprintById(id: number) {
