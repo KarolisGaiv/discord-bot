@@ -1,29 +1,29 @@
-import request from "supertest";
-import express from "express";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import messagesRouter from "../controller"
+import request from 'supertest';
+import express from 'express';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import messagesRouter from '../controller';
 
-describe("messages controller", () => {
-    let app: express.Application
-    
-    beforeEach(() => {
-        app = express()
-        app.use(express.json())
+describe('messages controller', () => {
+  let app: express.Application;
 
-        const messagesService = {
-            sendMessage: vi.fn(),
-            getMessages: vi.fn(),
-            getMessagesByUsername: vi.fn(),
-            getMessagesBySprint: vi.fn(),
-        }
+  beforeEach(() => {
+    app = express();
+    app.use(express.json());
 
-        app.use("/messages", messagesRouter(messagesService))
-    })
+    const messagesService = {
+      sendMessage: vi.fn(),
+      getMessages: vi.fn(),
+      getMessagesByUsername: vi.fn(),
+      getMessagesBySprint: vi.fn(),
+    };
 
-    it("should respond to GET/messages", async () => {
-        (messagesService.getMessages as vi.Mock).mockResolvedValue([])
+    app.use('/messages', messagesRouter(messagesService));
+  });
 
-        const res = await request(app).get("/messages")
-        expect(res.status).toBe(200)
-    })
-})
+  it('should respond to GET/messages', async () => {
+    (messagesService.getMessages as vi.Mock).mockResolvedValue([]);
+
+    const res = await request(app).get('/messages');
+    expect(res.status).toBe(200);
+  });
+});

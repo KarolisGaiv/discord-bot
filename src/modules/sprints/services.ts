@@ -1,60 +1,53 @@
-import type {Insertable, Updateable} from "kysely"
-import db, {type Sprints} from "@/database"
+import type { Insertable, Updateable } from 'kysely';
+import db, { type Sprints } from '@/database';
 
-type SprintWithoutId = Omit<Sprints, "id">
+type SprintWithoutId = Omit<Sprints, 'id'>;
 
 export function findAllSprints() {
-    return db
-    .selectFrom("sprints")
-    .selectAll()
-    .execute()
+  return db.selectFrom('sprints').selectAll().execute();
 }
 
 export function findSprintByCode(sprintCode: string) {
-    return db
-    .selectFrom("sprints")
+  return db
+    .selectFrom('sprints')
     .selectAll()
-    .where("code", "=", sprintCode)
-    .execute()
+    .where('code', '=', sprintCode)
+    .execute();
 }
 
 export function findSprintByTitle(sprintTitle: string) {
-    return db
-    .selectFrom("sprints")
+  return db
+    .selectFrom('sprints')
     .selectAll()
-    .where("title", "=", sprintTitle)
-    .execute()
+    .where('title', '=', sprintTitle)
+    .execute();
 }
 
 export function findSprintById(id: number) {
-    return db
-    .selectFrom("sprints")
+  return db
+    .selectFrom('sprints')
     .selectAll()
-    .where("id", "=", id)
-    .executeTakeFirstOrThrow()
+    .where('id', '=', id)
+    .executeTakeFirstOrThrow();
 }
 
 export function createSprint(sprintDetails: Insertable<SprintWithoutId>) {
-    return db
-    .insertInto("sprints")
+  return db
+    .insertInto('sprints')
     .values(sprintDetails)
     .returningAll()
-    .executeTakeFirst()
+    .executeTakeFirst();
 }
 
 export function update(id: number, details: Updateable<SprintWithoutId>) {
-    return db
-    .updateTable("sprints")
+  return db
+    .updateTable('sprints')
     .set(details)
-    .where("id", "=", id)
+    .where('id', '=', id)
     .returningAll()
-    .executeTakeFirst()
+    .executeTakeFirst();
 }
 
 export function remove(id: number) {
-    return db
-    .deleteFrom("sprints")
-    .where("id", "=", id)
-    .returningAll()
-    .execute()
+  return db.deleteFrom('sprints').where('id', '=', id).returningAll().execute();
 }
