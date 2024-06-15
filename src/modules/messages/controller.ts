@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as messages from "./service";
 import * as schema from "./schema"
 import { getGIF } from "../gifService/gifService";
+import { getRandomTemplate } from "../message-templates/services";
 
 const router = Router()
 
@@ -34,6 +35,15 @@ router.post("/", async (req, res) => {
         // const body = schema.parseInput(req.body)
         const gifUrl = await getGIF()
         console.log(gifUrl);
+
+        const message = await getRandomTemplate()
+        console.log(message);
+
+         // Combine the message body with the fetched gifUrl
+        //  const newMessageData = {
+        //     ...req.body,
+        //     gifUrl,
+        // };
 
 
         const newMessage = messages.create(req.body)

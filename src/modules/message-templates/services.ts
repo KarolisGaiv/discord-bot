@@ -43,3 +43,24 @@ export function remove(id: number) {
     .returningAll()
     .execute()
 }
+
+export async function getRandomTemplate() {
+    try {
+        const allTemplates = await db
+            .selectFrom("templates")
+            .selectAll()
+            .execute()
+        
+        if (!allTemplates) {
+            throw new Error('No templates found');
+        }
+
+        const randomIndex = Math.floor(Math.random() * allTemplates.length)
+        const randomTemplate = allTemplates[randomIndex].text;
+
+        return randomTemplate
+    } catch (error) {
+        console.error("Error fetching random message template", error)
+        throw new Error("Failed to fetch random message template")
+    }
+}
