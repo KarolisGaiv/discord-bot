@@ -23,20 +23,10 @@ export function findMessagesBySprintCode(sprintCode: string) {
     .execute();
 }
 
-// export function create(message: Insertable<NewMessage>) {
-//     console.log(message);
-//     // return db
-//     // .insertInto("messages")
-//     // .values(message)
-//     // .returningAll()
-//     // .executeTakeFirst()
-// }
-
 export function create(message) {
-  console.log("test");
-  // return db
-  // .insertInto("messages")
-  // .values(message)
-  // .returningAll()
-  // .executeTakeFirst()
+  return db
+  .insertInto("messages")
+  .values(message)
+  .returningAll()
+  .executeTakeFirst()
 }

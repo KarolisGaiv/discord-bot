@@ -36,32 +36,21 @@ router.get('/', async (req, res) => {
 
 // Send success message to Discord
 router.post('/', async (req, res) => {
-    // req.body will contain username and sprintCode
-
-    //1. get random gif - DONE
-    //2. get random message template - DONE
-    //3. get retrieve sprint title based on sprintCode  - DONE
-    //4. send all info to discord bot
-
   try {
     // const body = schema.parseInput(req.body)
     const gifUrl = await getGIF();
-    // console.log(gifUrl);
-
     const message = await getRandomTemplate();
-    // console.log(message);
-
     const {title} = await findSprintByCode(req.body.sprintCode)
-    console.log(title);
 
     // Combine the message body with the fetched gifUrl
-    //  const newMessageData = {
-    //     ...req.body,
-    //     gifUrl,
-    // };
+     const newMessageData = {
+        ...req.body,
+        message,
+        gifUrl,
+    };
 
-    const newMessage = messages.create(req.body);
-    res.status(200).json(gifUrl);
+    const newMessage = await messages.create(newMessageData);
+    res.status(200).json(newMessage);
   } catch (err) {
     res.status(500).json({ err: (err as Error).message });
   }
