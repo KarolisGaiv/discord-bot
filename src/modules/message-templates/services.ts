@@ -35,3 +35,11 @@ export function update(id: number, text: Updateable<TemplateWithoutId>) {
     .returningAll()
     .executeTakeFirst()
 }
+
+export function remove(id: number) {
+    return db
+    .deleteFrom("templates")
+    .where("id", "=", id)
+    .returningAll()
+    .execute()
+}

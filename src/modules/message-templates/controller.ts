@@ -62,7 +62,25 @@ router.patch("/:templateId", async (req, res) => {
     }
 })
 
+router.delete("/:templateId", async (req, res) => {
+    try {
+        const id = schema.parseId(req.params.templateId)
+        const templateToDelete = await templates.findTemplateById(id)
 
+        if (!templateToDelete) {
+            res.status(400).json({err: "Template not found"})
+            return
+        }
 
+        const deletedTemplate = await templates.remove(id)
+        res.status(200).json(deletedTemplate)
+    } catch (err) {
+        if (err instanceof z.ZodError) {
+            res.status(400).json({err: err.errors})
+        } else {
+            res.status(500).json({ err: (err as Error).message });
+        }
+    }
+})
 
 export default router
