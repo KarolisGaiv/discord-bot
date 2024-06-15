@@ -4,6 +4,7 @@ import * as schema from './schema';
 import { getGIF } from '../gifService/gifService';
 import { getRandomTemplate } from '../message-templates/services';
 import { findSprintByCode } from '../sprints/services';
+import { sendMessageToDiscord } from '@/bot/discordBot';
 
 const router = Router();
 
@@ -50,6 +51,8 @@ router.post('/', async (req, res) => {
     };
 
     const newMessage = await messages.create(newMessageData);
+
+    await sendMessageToDiscord(newMessageData);
     res.status(200).json(newMessage);
   } catch (err) {
     res.status(500).json({ err: (err as Error).message });

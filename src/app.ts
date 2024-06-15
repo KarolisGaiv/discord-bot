@@ -1,4 +1,5 @@
 import express from 'express';
+import './bot/discordBot';
 import messages from './modules/messages/controller';
 import messageTemplates from './modules/message-templates/controller';
 import sprints from './modules/sprints/controller';
