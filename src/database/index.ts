@@ -2,9 +2,9 @@
 import 'dotenv/config';
 import { CamelCasePlugin, Kysely, SqliteDialect } from 'kysely';
 import Database from 'better-sqlite3';
-import type { DB } from './types'; 
+import type { DB } from './types';
 
-export * from './types'; 
+export * from './types';
 
 const { DATABASE_URL } = process.env;
 
