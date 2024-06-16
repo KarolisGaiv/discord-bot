@@ -57,6 +57,7 @@ export async function getRandomTemplate() {
 
     return randomTemplate;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching random message template', error);
     throw new Error('Failed to fetch random message template');
   }

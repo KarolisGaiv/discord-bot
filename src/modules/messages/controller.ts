@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { z } from 'zod';
 import * as messages from './service';
 import * as schema from './schema';
 import { getGIF } from '../gifService/gifService';
@@ -8,15 +9,16 @@ import { sendMessageToDiscord } from '@/bot/utils/sendMessage';
 
 const router = Router();
 
-// Get all messages or filter by userId or sprintId
+// Get all messages or filter by userName or sprintCode
 router.get('/', async (req, res) => {
-  try {
-    const { userName, sprintCode } = req.query;
+  const parsedInput = schema.parsePartialInput(req.query);
+  const { username, sprintCode } = parsedInput;
 
-    if (userName) {
+  try {
+    if (username) {
       // Fetch messages for the specific user from the database
-      const messagesList = await messages.findMessagesByUserId(
-        userName as string
+      const messagesList = await messages.findMessagesByUserName(
+        username as string
       );
       res.status(200).json(messagesList);
     } else if (sprintCode) {
@@ -31,14 +33,17 @@ router.get('/', async (req, res) => {
       res.status(200).json(messagesList);
     }
   } catch (err) {
-    res.status(500).json({ err: (err as Error).message });
+    if (err instanceof z.ZodError) {
+      res.status(400).json({ err: err.errors });
+    } else {
+      res.status(500).json({ err: (err as Error).message });
+    }
   }
 });
 
 // Send success message to Discord
 router.post('/', async (req, res) => {
   try {
-    // const body = schema.parseInput(req.body)
     const gifUrl = await getGIF();
     const message = await getRandomTemplate();
     const { title } = await findSprintByCode(req.body.sprintCode);
@@ -49,6 +54,8 @@ router.post('/', async (req, res) => {
       message,
       gifUrl,
     };
+
+    schema.parseFullSchema(newMessageData);
 
     const newMessage = await messages.create(newMessageData);
 
