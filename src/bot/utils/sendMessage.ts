@@ -3,7 +3,7 @@ import { client } from "../discordBot";
 
 const { DISCORD_CHANNEL_ID } = process.env;
 
-export async function sendMessageToDiscord(messageData) {
+export async function sendMessageToDiscord(messageData, sprintTitle) {
     try {
       if (!client.isReady()) {
         throw new Error('Discord client is not ready');
@@ -17,11 +17,11 @@ export async function sendMessageToDiscord(messageData) {
         throw new Error('Discord channel not found or is not text-based.');
       }
   
-      const { username, sprintCode, message, gifUrl } = messageData;
+      const { username, message, gifUrl } = messageData;
   
       // Send the message to the channel
       await channel.send(
-        `${username} has just completed ${sprintCode}!\n${message}`
+        `${username} has just completed ${sprintTitle}!\n${message}`
       );
       await channel.send(gifUrl);
     } catch (error) {

@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
 
     const newMessage = await messages.create(newMessageData);
 
-    await sendMessageToDiscord(newMessageData);
+    await sendMessageToDiscord(newMessageData, title);
     res.status(200).json(newMessage);
   } catch (err) {
     res.status(500).json({ err: (err as Error).message });
