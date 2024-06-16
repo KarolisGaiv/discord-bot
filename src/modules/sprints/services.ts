@@ -1,5 +1,5 @@
 import type { Insertable, Updateable } from 'kysely';
-import db, { type Sprints } from '@/database';
+import db, { type Sprints } from "../../database";
 
 type SprintWithoutId = Omit<Sprints, 'id'>;
 
