@@ -21,7 +21,8 @@ export async function sendMessageToDiscord(messageData) {
   
       // Send the message to the channel
       await channel.send(
-        `${message} - ${username} completed sprint ${sprintCode}!`
+        `${username} has just completed ${sprintCode}!\n${message}`
+        // `${message} - ${username} completed sprint ${sprintCode}!`
       );
       await channel.send(gifUrl);
     } catch (error) {
