@@ -4,7 +4,7 @@ import * as schema from './schema';
 import { getGIF } from '../gifService/gifService';
 import { getRandomTemplate } from '../message-templates/services';
 import { findSprintByCode } from '../sprints/services';
-import { sendMessageToDiscord } from '@/bot/discordBot';
+import { sendMessageToDiscord } from '@/bot/utils/sendMessage';
 
 const router = Router();
 
