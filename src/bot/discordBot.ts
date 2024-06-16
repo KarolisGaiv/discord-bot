@@ -14,6 +14,7 @@ export const client = new Client({
 });
 
 client.once(Events.ClientReady, (readyClient) => {
+  // eslint-disable-next-line no-console
   console.log(`Discord bot is ready! Logged in as ${readyClient.user.tag}`);
 });
 
