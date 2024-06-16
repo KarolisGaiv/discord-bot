@@ -28,7 +28,7 @@ export function findSprintById(id: number) {
     .selectFrom('sprints')
     .selectAll()
     .where('id', '=', id)
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 }
 
 export function createSprint(sprintDetails: Insertable<SprintWithoutId>) {
@@ -45,7 +45,7 @@ export function update(id: number, details: Updateable<SprintWithoutId>) {
     .set(details)
     .where('id', '=', id)
     .returningAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 }
 
 export function remove(id: number) {
