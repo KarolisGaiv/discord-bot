@@ -1,13 +1,14 @@
-import type { Insertable } from 'kysely';
-import db, { type Messages } from '@/database';
+import type { Insertable, Kysely } from 'kysely';
+import { type Messages } from '@/database';
+import type { DB } from '@/database/types';
 
 type NewMessage = Omit<Messages, 'id' | 'createdAt'>;
 
-export function findAllMessages() {
+export function findAllMessages(db: Kysely<DB>) {
   return db.selectFrom('messages').selectAll().execute();
 }
 
-export async function findMessagesByUserName(userName: string) {
+export async function findMessagesByUserName(db: Kysely<DB>, userName: string) {
   const messages = await db
     .selectFrom('messages')
     .selectAll()
@@ -21,7 +22,10 @@ export async function findMessagesByUserName(userName: string) {
   return messages;
 }
 
-export async function findMessagesBySprintCode(sprintCode: string) {
+export async function findMessagesBySprintCode(
+  db: Kysely<DB>,
+  sprintCode: string
+) {
   const messages = await db
     .selectFrom('messages')
     .selectAll()
@@ -35,7 +39,7 @@ export async function findMessagesBySprintCode(sprintCode: string) {
   return messages;
 }
 
-export function create(message: Insertable<NewMessage>) {
+export function create(db: Kysely<DB>, message: Insertable<NewMessage>) {
   return db
     .insertInto('messages')
     .values(message)
