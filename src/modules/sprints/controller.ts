@@ -6,7 +6,11 @@ import * as schema from './schema';
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const parsedInput = schema.parsePartialInput(req.query);
+  const query = {
+    code: req.query.code || req.query.sprintCode,
+    title: req.query.title || req.query.sprintTitle,
+  };
+  const parsedInput = schema.parsePartialInput(query);
   const { code, title } = parsedInput;
 
   try {

@@ -14,9 +14,9 @@ router.get('/', async (req, res) => {
   // normalize query params (accept username, userName, code, sprintCode as query params)
   const query = {
     username: req.query.userName || req.query.username,
-    sprintCode: req.query.code || req.query.sprintCode
+    sprintCode: req.query.code || req.query.sprintCode,
   };
-  
+
   const parsedInput = schema.parsePartialInput(query);
   const { username, sprintCode } = parsedInput;
 
