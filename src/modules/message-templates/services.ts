@@ -1,6 +1,6 @@
 import type { Insertable, Kysely, Updateable } from 'kysely';
 import { type Templates } from '@/database';
-import type {DB} from "@/database/types"
+import type { DB } from '@/database/types';
 
 type TemplateWithoutId = Omit<Templates, 'id'>;
 
@@ -20,7 +20,10 @@ export function findTemplateByText(db: Kysely<DB>, text: string) {
     .executeTakeFirstOrThrow();
 }
 
-export function createTemplate(db: Kysely<DB>, text: Insertable<TemplateWithoutId>) {
+export function createTemplate(
+  db: Kysely<DB>,
+  text: Insertable<TemplateWithoutId>
+) {
   return db
     .insertInto('templates')
     .values(text)
@@ -28,7 +31,11 @@ export function createTemplate(db: Kysely<DB>, text: Insertable<TemplateWithoutI
     .executeTakeFirst();
 }
 
-export function update(db: Kysely<DB>, id: number, text: Updateable<TemplateWithoutId>) {
+export function update(
+  db: Kysely<DB>,
+  id: number,
+  text: Updateable<TemplateWithoutId>
+) {
   return db
     .updateTable('templates')
     .set(text)

@@ -1,7 +1,7 @@
 import { Kysely } from 'kysely';
 import { expect, describe, it, beforeEach, afterEach } from 'vitest';
-import { getTestDbInstance } from '../../../database/db-test'; 
-import * as sprintService from "../services";
+import { getTestDbInstance } from '../../../database/db-test';
+import * as sprintService from '../services';
 import type { DB } from '../../../database/types';
 
 describe('Sprint Service', () => {
@@ -9,10 +9,13 @@ describe('Sprint Service', () => {
 
   beforeEach(async () => {
     db = getTestDbInstance();
-    await db.insertInto('sprints').values([
-      { code: 'SP1', title: 'Sprint 1' },
-      { code: 'SP2', title: 'Sprint 2' },
-    ]).execute();
+    await db
+      .insertInto('sprints')
+      .values([
+        { code: 'SP1', title: 'Sprint 1' },
+        { code: 'SP2', title: 'Sprint 2' },
+      ])
+      .execute();
   });
 
   afterEach(async () => {
@@ -30,7 +33,9 @@ describe('Sprint Service', () => {
   });
 
   it('should throw an error if sprint not found by code', async () => {
-    await expect(sprintService.findSprintByCode(db, 'SP3')).rejects.toThrowError();
+    await expect(
+      sprintService.findSprintByCode(db, 'SP3')
+    ).rejects.toThrowError();
   });
 
   it('should find a sprint by title', async () => {
@@ -39,7 +44,9 @@ describe('Sprint Service', () => {
   });
 
   it('should throw an error if sprint not found by title', async () => {
-    await expect(sprintService.findSprintByTitle(db, 'Sprint 3')).rejects.toThrowError();
+    await expect(
+      sprintService.findSprintByTitle(db, 'Sprint 3')
+    ).rejects.toThrowError();
   });
 
   it('should find a sprint by ID', async () => {
@@ -49,23 +56,34 @@ describe('Sprint Service', () => {
 
   it('should return undefined if sprint not found by ID', async () => {
     const sprint = await sprintService.findSprintById(db, 999);
-    expect(sprint).toBeUndefined(); 
+    expect(sprint).toBeUndefined();
   });
 
   it('should create a new sprint', async () => {
-    const newSprint = await sprintService.createSprint(db, { code: 'SP3', title: 'Sprint 3' });
-    expect(newSprint).toEqual(expect.objectContaining({ code: 'SP3', title: 'Sprint 3' }));
+    const newSprint = await sprintService.createSprint(db, {
+      code: 'SP3',
+      title: 'Sprint 3',
+    });
+    expect(newSprint).toEqual(
+      expect.objectContaining({ code: 'SP3', title: 'Sprint 3' })
+    );
   });
 
   it('should update an existing sprint', async () => {
-    const updatedSprint = await sprintService.update(db, 1, { title: 'Updated Sprint 1' });
-    expect(updatedSprint).toEqual({ id: 1, code: 'SP1', title: 'Updated Sprint 1' });
+    const updatedSprint = await sprintService.update(db, 1, {
+      title: 'Updated Sprint 1',
+    });
+    expect(updatedSprint).toEqual({
+      id: 1,
+      code: 'SP1',
+      title: 'Updated Sprint 1',
+    });
   });
 
   it('should remove a sprint', async () => {
     const deletedSprint = await sprintService.remove(db, 1);
-    expect(deletedSprint).toEqual([{ id: 1, code: 'SP1', title: 'Sprint 1' }]); 
+    expect(deletedSprint).toEqual([{ id: 1, code: 'SP1', title: 'Sprint 1' }]);
     const allSprints = await db.selectFrom('sprints').selectAll().execute();
-    expect(allSprints).toHaveLength(1); 
+    expect(allSprints).toHaveLength(1);
   });
 });

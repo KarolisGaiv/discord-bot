@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import * as sprints from './services';
 import * as schema from './schema';
-import db from "../../database"
+import db from '../../database';
 
 const router = Router();
 

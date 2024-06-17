@@ -1,6 +1,6 @@
 import { Kysely } from 'kysely';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { getTestDbInstance } from '../../../database/db-test'; 
+import { getTestDbInstance } from '../../../database/db-test';
 import * as templateService from '../services';
 import type { DB } from '../../../database/types';
 
@@ -9,10 +9,10 @@ describe('Template Service', () => {
 
   beforeEach(async () => {
     db = getTestDbInstance();
-    await db.insertInto('templates').values([
-      { text: 'Template 1' },
-      { text: 'Template 2' },
-    ]).execute();
+    await db
+      .insertInto('templates')
+      .values([{ text: 'Template 1' }, { text: 'Template 2' }])
+      .execute();
   });
 
   afterEach(async () => {
@@ -25,7 +25,9 @@ describe('Template Service', () => {
   });
 
   it('should throw an error if template not found by ID', async () => {
-    await expect(templateService.findTemplateById(db, 999)).rejects.toThrowError();
+    await expect(
+      templateService.findTemplateById(db, 999)
+    ).rejects.toThrowError();
   });
 
   it('should find a template by text', async () => {
@@ -34,16 +36,24 @@ describe('Template Service', () => {
   });
 
   it('should throw an error if template not found by text', async () => {
-    await expect(templateService.findTemplateByText(db, 'Nonexistent Template')).rejects.toThrowError();
+    await expect(
+      templateService.findTemplateByText(db, 'Nonexistent Template')
+    ).rejects.toThrowError();
   });
 
   it('should create a new template', async () => {
-    const newTemplate = await templateService.createTemplate(db, { text: 'New Template' });
-    expect(newTemplate).toEqual(expect.objectContaining({ text: 'New Template' }));
+    const newTemplate = await templateService.createTemplate(db, {
+      text: 'New Template',
+    });
+    expect(newTemplate).toEqual(
+      expect.objectContaining({ text: 'New Template' })
+    );
   });
 
   it('should update an existing template', async () => {
-    const updatedTemplate = await templateService.update(db, 1, { text: 'Updated Template' });
+    const updatedTemplate = await templateService.update(db, 1, {
+      text: 'Updated Template',
+    });
     expect(updatedTemplate).toEqual({ id: 1, text: 'Updated Template' });
   });
 
@@ -51,11 +61,11 @@ describe('Template Service', () => {
     const deletedTemplate = await templateService.remove(db, 1);
     expect(deletedTemplate).toEqual([{ id: 1, text: 'Template 1' }]);
     const allTemplates = await db.selectFrom('templates').selectAll().execute();
-    expect(allTemplates).toHaveLength(1); 
+    expect(allTemplates).toHaveLength(1);
   });
 
   it('should return a random template text', async () => {
     const randomTemplateText = await templateService.getRandomTemplate(db);
-    expect(['Template 1', 'Template 2']).toContain(randomTemplateText); 
+    expect(['Template 1', 'Template 2']).toContain(randomTemplateText);
   });
 });

@@ -1,6 +1,6 @@
 import type { Insertable, Kysely, Updateable } from 'kysely';
 import { type Sprints } from '../../database';
-import type {DB} from "@/database/types"
+import type { DB } from '@/database/types';
 
 type SprintWithoutId = Omit<Sprints, 'id'>;
 
@@ -32,7 +32,10 @@ export function findSprintById(db: Kysely<DB>, id: number) {
     .executeTakeFirst();
 }
 
-export function createSprint(db: Kysely<DB>, sprintDetails: Insertable<SprintWithoutId>) {
+export function createSprint(
+  db: Kysely<DB>,
+  sprintDetails: Insertable<SprintWithoutId>
+) {
   return db
     .insertInto('sprints')
     .values(sprintDetails)
@@ -40,7 +43,11 @@ export function createSprint(db: Kysely<DB>, sprintDetails: Insertable<SprintWit
     .executeTakeFirst();
 }
 
-export function update(db: Kysely<DB>, id: number, details: Updateable<SprintWithoutId>) {
+export function update(
+  db: Kysely<DB>,
+  id: number,
+  details: Updateable<SprintWithoutId>
+) {
   return db
     .updateTable('sprints')
     .set(details)

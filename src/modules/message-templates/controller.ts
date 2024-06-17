@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import * as templates from './services';
 import * as schema from './schema';
-import db from "../../database"
+import db from '../../database';
 
 const router = Router();
 
@@ -17,7 +17,10 @@ router.get('/', async (req, res) => {
       res.status(200).json(templateInfo);
     } else {
       // fetch template by text
-      const templateInfo = await templates.findTemplateByText(db, text as string);
+      const templateInfo = await templates.findTemplateByText(
+        db,
+        text as string
+      );
       res.status(200).json(templateInfo);
     }
   } catch (err) {
