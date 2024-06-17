@@ -1,13 +1,14 @@
-import type { Insertable, Updateable } from 'kysely';
-import db, { type Sprints } from '../../database';
+import type { Insertable, Kysely, Updateable } from 'kysely';
+import { type Sprints } from '../../database';
+import type {DB} from "@/database/types"
 
 type SprintWithoutId = Omit<Sprints, 'id'>;
 
-export function findAllSprints() {
+export function findAllSprints(db: Kysely<DB>) {
   return db.selectFrom('sprints').selectAll().execute();
 }
 
-export function findSprintByCode(sprintCode: string) {
+export function findSprintByCode(db: Kysely<DB>, sprintCode: string) {
   return db
     .selectFrom('sprints')
     .selectAll()
@@ -15,7 +16,7 @@ export function findSprintByCode(sprintCode: string) {
     .executeTakeFirstOrThrow();
 }
 
-export function findSprintByTitle(sprintTitle: string) {
+export function findSprintByTitle(db: Kysely<DB>, sprintTitle: string) {
   return db
     .selectFrom('sprints')
     .selectAll()
@@ -23,7 +24,7 @@ export function findSprintByTitle(sprintTitle: string) {
     .executeTakeFirstOrThrow();
 }
 
-export function findSprintById(id: number) {
+export function findSprintById(db: Kysely<DB>, id: number) {
   return db
     .selectFrom('sprints')
     .selectAll()
@@ -31,7 +32,7 @@ export function findSprintById(id: number) {
     .executeTakeFirst();
 }
 
-export function createSprint(sprintDetails: Insertable<SprintWithoutId>) {
+export function createSprint(db: Kysely<DB>, sprintDetails: Insertable<SprintWithoutId>) {
   return db
     .insertInto('sprints')
     .values(sprintDetails)
@@ -39,7 +40,7 @@ export function createSprint(sprintDetails: Insertable<SprintWithoutId>) {
     .executeTakeFirst();
 }
 
-export function update(id: number, details: Updateable<SprintWithoutId>) {
+export function update(db: Kysely<DB>, id: number, details: Updateable<SprintWithoutId>) {
   return db
     .updateTable('sprints')
     .set(details)
@@ -48,6 +49,6 @@ export function update(id: number, details: Updateable<SprintWithoutId>) {
     .executeTakeFirstOrThrow();
 }
 
-export function remove(id: number) {
+export function remove(db: Kysely<DB>, id: number) {
   return db.deleteFrom('sprints').where('id', '=', id).returningAll().execute();
 }

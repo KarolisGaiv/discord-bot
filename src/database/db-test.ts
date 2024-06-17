@@ -15,5 +15,12 @@ export function getTestDbInstance() {
     .addColumn('text', 'text', (col) => col.notNull())
     .execute();
 
+    db.schema
+    .createTable('sprints')
+    .addColumn('id', 'integer', (col) => col.primaryKey().autoIncrement())
+    .addColumn('code', 'text', (col) => col.notNull())
+    .addColumn('title', 'text', (col) => col.notNull())
+    .execute();
+
   return db;
 }
