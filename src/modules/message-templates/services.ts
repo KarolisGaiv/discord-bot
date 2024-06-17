@@ -1,9 +1,10 @@
-import type { Insertable, Updateable } from 'kysely';
-import db, { type Templates } from '@/database';
+import type { Insertable, Kysely, Updateable } from 'kysely';
+import { type Templates } from '@/database';
+import type {DB} from "@/database/types"
 
 type TemplateWithoutId = Omit<Templates, 'id'>;
 
-export function findTemplateById(id: number) {
+export function findTemplateById(db: Kysely<DB>, id: number) {
   return db
     .selectFrom('templates')
     .selectAll()
@@ -11,7 +12,7 @@ export function findTemplateById(id: number) {
     .executeTakeFirstOrThrow();
 }
 
-export function findTemplateByText(text: string) {
+export function findTemplateByText(db: Kysely<DB>, text: string) {
   return db
     .selectFrom('templates')
     .selectAll()
@@ -19,7 +20,7 @@ export function findTemplateByText(text: string) {
     .executeTakeFirstOrThrow();
 }
 
-export function createTemplate(text: Insertable<TemplateWithoutId>) {
+export function createTemplate(db: Kysely<DB>, text: Insertable<TemplateWithoutId>) {
   return db
     .insertInto('templates')
     .values(text)
@@ -27,7 +28,7 @@ export function createTemplate(text: Insertable<TemplateWithoutId>) {
     .executeTakeFirst();
 }
 
-export function update(id: number, text: Updateable<TemplateWithoutId>) {
+export function update(db: Kysely<DB>, id: number, text: Updateable<TemplateWithoutId>) {
   return db
     .updateTable('templates')
     .set(text)
@@ -36,7 +37,7 @@ export function update(id: number, text: Updateable<TemplateWithoutId>) {
     .executeTakeFirst();
 }
 
-export function remove(id: number) {
+export function remove(db: Kysely<DB>, id: number) {
   return db
     .deleteFrom('templates')
     .where('id', '=', id)
@@ -44,7 +45,7 @@ export function remove(id: number) {
     .execute();
 }
 
-export async function getRandomTemplate() {
+export async function getRandomTemplate(db: Kysely<DB>) {
   try {
     const allTemplates = await db.selectFrom('templates').selectAll().execute();
 
