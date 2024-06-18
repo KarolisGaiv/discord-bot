@@ -55,7 +55,37 @@ The REST API supports the following endpoints:
 ## Using Endpoints
 To interact with the API endpoints, you can use tools like Postman or any similar API testing tool. Below are examples of how to use the endpoints.
 
-**Sprints Endpoints**
+### Messages  Endpoints
+#### GET /messages
+
+Retrieve information about the messages.
+- **Retrieve ALL messages:**
+
+  ```http
+  GET http://localhost:3000/messages
+- **Retrieve messages by sprintCode:**
+
+  ```http
+  GET http://localhost:3000/messages?sprintCode=WD-3.4
+- **Retrieve messages by username:**
+
+  ```http
+  GET http://localhost:3000/messages?username=charlie
+
+#### POST /messages (send message via discord bot). In order to send message using discord bot, be sure to start the server (_npm run dev_)
+- **Endpoint URL:**
+
+  ```http
+  POST http://localhost:3000/messages
+- **Provide the following JSON payload in the request body** Adjust the text value accordingly.
+
+  ```sh
+  {
+  "username": "foo",
+  "sprintCode": "bar"
+  }
+
+### Sprints Endpoints
 #### GET /sprints
 
 Retrieve information about sprints.
@@ -77,7 +107,7 @@ Retrieve information about sprints.
 
   ```http
   POST http://localhost:3000/sprints
-- **Set the Content-Type header to application/json and provide the following JSON payload in the request body** Adjust the code and title values according to the sprint you want to create.
+- **Provide the following JSON payload in the request body** Adjust the code and title values according to the sprint you want to create.
 
   ```sh
   {
@@ -91,7 +121,7 @@ Retrieve information about sprints.
   ```http
   PATCH http://localhost:3000/sprints
 
-- **Set the Content-Type header to application/json and provide the following JSON payload in the request body** Adjust the code or title value accordingly.
+- **Provide the following JSON payload in the request body** Adjust the code or title value accordingly.
 
   ```sh
   {
@@ -108,7 +138,7 @@ To delete a sprint using the `/sprints/:sprintId` endpoint, follow these steps:
   DELETE http://localhost:3000/sprints/20
 
 
-**Message Templates Endpoints**
+### Message Templates Endpoints
 #### GET /templates
 
 Retrieve information about message templates.
@@ -138,6 +168,7 @@ Retrieve information about message templates.
 
   ```http
   PATCH http://localhost:3000/templates/:templateId
+
   Replace `:templateId` with the actual ID of the message template you want to update.
 
 - **Provide the following JSON payload in the request body** Adjust the text value accordingly.
