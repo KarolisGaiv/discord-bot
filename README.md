@@ -51,3 +51,23 @@ The REST API supports the following endpoints:
 6. **Run tests**
    ```sh
    npm run test  
+
+## Using Endpoints
+To interact with the API endpoints, you can use tools like Postman or any similar API testing tool. Below are examples of how to use the endpoints.
+
+**Sprints Endpoints**
+#### GET /sprints
+
+Retrieve information about sprints.
+- **Retrieve all sprints:**
+
+  ```http
+  GET http://localhost:3000/sprints
+- **Retrieve sprint by code:**
+
+  ```http
+  GET http://localhost:3000/sprints?code=WD-1.1
+- **Retrieve sprint by title:**
+
+  ```http
+  GET http://localhost:3000/sprints?title=Web Development Sprint 1.2
