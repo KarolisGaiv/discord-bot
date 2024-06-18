@@ -33,5 +33,9 @@ The REST API supports the following endpoints:
 
 1. **Clone the repository:**
    ```sh
-   git clone <repository-url>
-   cd <repository-name>
+   git clone 
+2. **Install dependencies:**
+   ```sh
+   npm install
+3.  **Environment Variables**
+   _Fill in your own API keys and configuration values in the .env.example file._ After doing that **rename file to .env**
