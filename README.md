@@ -39,3 +39,15 @@ The REST API supports the following endpoints:
    npm install
 3.  **Environment Variables**
    _Fill in your own API keys and configuration values in the .env.example file._ After doing that **rename file to .env**
+4. **Run Database Migrations**
+   ```sh
+   npm run migrate:latest
+   npm run gen:types
+
+## Running the Application
+5. **Start The Server**
+   ```sh
+   npm run dev
+6. **Run tests**
+   ```sh
+   npm run test  
