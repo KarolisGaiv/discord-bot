@@ -63,6 +63,38 @@ describe('Messages Controller', () => {
     vi.resetAllMocks();
   });
 
+  describe("GET '/' endpoint", () => {
+    it('should get all messages', async () => {
+      const res = await supertest(app).get('/messages');
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(2);
+    });
+
+    it('should get all messages by sprintCode', async () => {
+      const res = await supertest(app).get('/messages?sprintCode=SP1');
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(1);
+    });
+
+    it('should get all messages by username', async () => {
+      const res = await supertest(app).get('/messages?username=user2');
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(1);
+    });
+
+    it('should return 500 if messagse not found by username', async () => {
+      const res = await supertest(app).get('/messages?username=NONEXISTENT');
+      expect(res.status).toBe(500);
+      expect(res.body).toEqual({ err: 'User not found' });
+    });
+
+    it('should return 500 if messagse not found by sprint code', async () => {
+      const res = await supertest(app).get('/messages?sprintCode=NONEXISTENT');
+      expect(res.status).toBe(500);
+      expect(res.body).toEqual({ err: 'Sprint code not found' });
+    });
+  });
+
   describe("POST '/' endpoint", () => {
     it('should send message to Discord', async () => {
       const postData = {
