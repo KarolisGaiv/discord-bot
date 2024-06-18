@@ -71,3 +71,16 @@ Retrieve information about sprints.
 
   ```http
   GET http://localhost:3000/sprints?title=Web Development Sprint 1.2
+
+#### POST /sprints
+- **Endpoint URL:**
+
+  ```http
+  POST http://localhost:3000/sprints
+- **Set the Content-Type header to application/json and provide the following JSON payload in the request body** Adjust the code and title values according to the sprint you want to create.
+
+  ```sh
+  {
+  "code": "foo",
+  "title": "Bar"
+  }
