@@ -10,5 +10,4 @@ const PartialSprint = schema.omit({ id: true }).partial();
 
 export const parseId = (id: unknown) => schema.shape.id.parse(id);
 export const parsePartialInput = (input: unknown) => PartialSprint.parse(input);
-export const parseNewSprintInput = (input: unknown) =>
-  schema.omit({ id: true }).parse(input);
+export const parseNewSprintInput = schema.omit({ id: true });
