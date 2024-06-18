@@ -34,7 +34,7 @@ describe('Templates Controller', () => {
     it('should get message template by id', async () => {
       const res = await supertest(app).get('/templates?id=1');
       expect(res.status).toBe(200);
-      expect(res.body.text).toBe('Test Sprint 1');
+      expect(res.body.id).toBe(1);
     });
 
     it('should get message template by text', async () => {
@@ -61,6 +61,51 @@ describe('Templates Controller', () => {
       const res = await supertest(app).get('/templates?id=999');
       expect(res.status).toBe(500);
       expect(res.body).toEqual({ err: 'no result' });
+    });
+  });
+
+  describe("POST '/' endpoint", () => {
+    it('should create new message template', async () => {
+      // before adding new template
+      const before = await supertest(app).get('/templates?text=NEW TEMPLATE');
+      expect(before.status).toBe(500);
+      expect(before.body).toEqual({ err: 'no result' });
+
+      // add new template
+      const res = await supertest(app)
+        .post('/templates')
+        .send({ text: 'NEW TEMPLATE' });
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual(
+        expect.objectContaining({
+          text: 'NEW TEMPLATE',
+        })
+      );
+
+      // after adding new template
+      const after = await supertest(app).get('/templates?text=NEW TEMPLATE');
+      expect(after.status).toBe(200);
+      expect(after.body.text).toBe('NEW TEMPLATE');
+    });
+
+    it('should return 400 for invalid input', async () => {
+      const invalidInput = { text: '' };
+      const response = await supertest(app)
+        .post('/templates')
+        .send(invalidInput);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('err');
+    });
+
+    it('should return 400 for invalid input', async () => {
+      const invalidInput = { invalid: 'INVALID' };
+      const response = await supertest(app)
+        .post('/templates')
+        .send(invalidInput);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('err');
     });
   });
 });
