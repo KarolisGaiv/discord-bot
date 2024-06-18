@@ -108,4 +108,41 @@ describe('Templates Controller', () => {
       expect(response.body).toHaveProperty('err');
     });
   });
+
+  describe("PATCH '/:templateId' endpoint", () => {
+    it('should update existing template', async () => {
+      const updateData = { text: 'Updating text' };
+      const existingTemplateId = 1;
+
+      const res = await supertest(app)
+        .patch(`/templates/${existingTemplateId}`)
+        .send(updateData);
+
+      expect(res.status).toBe(200);
+      expect(res.body.text).toBe('Updating text');
+    });
+
+    it('should return 400 for invalid update data', async () => {
+      const invalidUpdateData = { text: '' };
+      const existingTemplateId = 1;
+
+      const res = await supertest(app)
+        .patch(`/templates/${existingTemplateId}`)
+        .send(invalidUpdateData);
+
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty('err');
+    });
+
+    it('should return 400 if template to update is not found', async () => {
+      const nonExistentId = 999;
+      const updateData = { text: 'Updating text' };
+      const res = await supertest(app)
+        .patch(`/templates/${nonExistentId}`)
+        .send(updateData);
+
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ err: 'Template not found' });
+    });
+  });
 });

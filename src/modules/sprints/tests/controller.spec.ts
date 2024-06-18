@@ -125,7 +125,6 @@ describe('Sprints Controller', () => {
 
     it('should return 400 for invalid update data', async () => {
       const invalidUpdateData = { title: '' };
-
       const existingSprintId = 1;
 
       const res = await supertest(app)
