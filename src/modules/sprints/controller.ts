@@ -41,8 +41,6 @@ export function createSprintsRouter(db: Kysely<DB>) {
 
   router.post('/', async (req, res) => {
     try {
-      // eslint-disable-next-line no-console
-      console.log(req.body);
       const parsedInput = schema.parseNewSprintInput.parse(req.body);
       const newSprint = await sprints.createSprint(db, parsedInput);
       res.status(201).json(newSprint);
@@ -57,12 +55,8 @@ export function createSprintsRouter(db: Kysely<DB>) {
 
   router.patch('/:sprintId', async (req, res) => {
     try {
-      // eslint-disable-next-line no-console
-      console.log('request body', req.body);
       const id = schema.parseId(req.params.sprintId);
       const body = schema.parsePartialInput(req.body);
-      // eslint-disable-next-line no-console
-      console.log('parsed body', req.body);
       const updatedSprint = await sprints.update(db, id, body);
 
       if (!updatedSprint) {

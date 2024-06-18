@@ -13,7 +13,9 @@ describe('Sprints Controller', () => {
   beforeAll(async () => {
     testDb = getTestDbInstance();
     const sprintsRouter = createSprintsRouter(testDb);
-    app = express().use('/sprints', sprintsRouter);
+    app = express()
+    app.use(express.json())
+    app.use("/sprints", sprintsRouter)
 
     await testDb
       .insertInto('sprints')
@@ -72,10 +74,9 @@ describe('Sprints Controller', () => {
     });
   });
 
-  describe.skip("POST '/' endpoint", () => {
+  describe("POST '/' endpoint", () => {
     it('should create a new sprint', async () => {
       const newSprint = { code: 'TST3', title: 'Test Sprint 3' };
-
       const res = await supertest(app).post('/sprints').send(newSprint);
 
       expect(res.status).toBe(201);
@@ -89,9 +90,27 @@ describe('Sprints Controller', () => {
       const allSprints = await supertest(app).get('/sprints');
       expect(allSprints.body).toHaveLength(3);
     });
+
+    it('should return 400 for invalid input', async () => {
+      const invalidInput = { code: 'TST3' }; 
+  
+      const response = await supertest(app).post('/sprints').send(invalidInput);
+  
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('err');
+    });
+
+    it('should return 400 for invalid input', async () => {
+      const invalidInput = { code: 'TST3', title: "" }; 
+  
+      const response = await supertest(app).post('/sprints').send(invalidInput);
+  
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('err');
+    });
   });
 
-  describe.skip("PATCH '/:id' endpoint", () => {
+  describe("PATCH '/:id' endpoint", () => {
     it('should partially update an existing sprint', async () => {
       const updateData = { title: 'Updated Sprint Title' };
       const existingSprintId = 1;
@@ -99,8 +118,6 @@ describe('Sprints Controller', () => {
       const res = await supertest(app)
         .patch(`/sprints/${existingSprintId}`)
         .send(updateData)
-        .set('Content-Type', 'application/json')
-        .set('Accept', 'application/json');
 
       expect(res.status).toBe(200);
 
