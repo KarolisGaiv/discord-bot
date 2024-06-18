@@ -96,4 +96,15 @@ Retrieve information about sprints.
   ```sh
   {
     "title": "Updated sprint text"
-  }   
+  }
+
+#### DELETE /sprints
+To delete a sprint using the `/sprints/:sprintId` endpoint, follow these steps:
+- **Endpoint URL:**
+
+   Replace `:sprintId` with the actual ID of the sprint you want to delete.
+   
+  ```http
+  DELETE http://localhost:3000/sprints/20
+
+
