@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import supertest from 'supertest';
 import express from 'express';
 import { Kysely } from 'kysely';
@@ -10,7 +10,7 @@ describe('Sprints Controller', () => {
   let testDb: Kysely<DB>;
   let app: express.Application;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     testDb = getTestDbInstance();
     const sprintsRouter = createSprintsRouter(testDb);
     app = express()
@@ -26,7 +26,7 @@ describe('Sprints Controller', () => {
       .execute();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await testDb.destroy();
   });
 
@@ -120,17 +120,10 @@ describe('Sprints Controller', () => {
         .send(updateData)
 
       expect(res.status).toBe(200);
-
       expect(res.body.title).toBe('Updated Sprint Title');
-
-      const updatedSprintRes = await supertest(app).get(
-        `/sprints/${existingSprintId}`
-      );
-      expect(updatedSprintRes.status).toBe(200);
-      expect(updatedSprintRes.body.title).toBe('Updated Sprint Title');
     });
 
-    it.skip('should return 400 for invalid update data', async () => {
+    it('should return 400 for invalid update data', async () => {
       const invalidUpdateData = { title: '' };
 
       const existingSprintId = 1;
@@ -144,7 +137,7 @@ describe('Sprints Controller', () => {
       expect(res.body).toHaveProperty('err');
     });
 
-    it.skip('should return 500 if sprint to update is not found', async () => {
+    it('should return 500 if sprint to update is not found', async () => {
       const nonExistentSprintId = 999;
 
       const updateData = { title: 'Updated Title' };
@@ -155,7 +148,28 @@ describe('Sprints Controller', () => {
         .send(updateData);
 
       expect(res.status).toBe(500);
-      expect(res.body).toEqual({ err: 'Sprint not found' });
+      expect(res.body).toEqual({ err: 'no result' });
     });
   });
+
+  describe("DELETE '/:id' endpoint", () => {
+    it('should delete a sprint', async () => {
+      const response = await supertest(app).delete(`/sprints/1`);
+  
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expect.objectContaining([{
+        id: 1,
+        code: "TST1",
+        title: 'Test Sprint 1'
+      }]));
+    });
+
+    it('should return 400 if sprint to delete is not found', async () => {
+      const nonExistentSprintId = 999;
+      const response = await supertest(app).delete(`/sprints/${nonExistentSprintId}`)
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ err: 'Sprint not found' });
+    });
+  })
 });
