@@ -84,3 +84,16 @@ Retrieve information about sprints.
   "code": "foo",
   "title": "Bar"
   }
+
+#### PATCH /sprints
+- **Endpoint URL:**
+
+  ```http
+  PATCH http://localhost:3000/sprints
+
+- **Set the Content-Type header to application/json and provide the following JSON payload in the request body** Adjust the code or title value accordingly.
+
+  ```sh
+  {
+    "title": "Updated sprint text"
+  }   
