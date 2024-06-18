@@ -13,9 +13,9 @@ describe('Sprints Controller', () => {
   beforeEach(async () => {
     testDb = getTestDbInstance();
     const sprintsRouter = createSprintsRouter(testDb);
-    app = express()
-    app.use(express.json())
-    app.use("/sprints", sprintsRouter)
+    app = express();
+    app.use(express.json());
+    app.use('/sprints', sprintsRouter);
 
     await testDb
       .insertInto('sprints')
@@ -92,19 +92,19 @@ describe('Sprints Controller', () => {
     });
 
     it('should return 400 for invalid input', async () => {
-      const invalidInput = { code: 'TST3' }; 
-  
+      const invalidInput = { code: 'TST3' };
+
       const response = await supertest(app).post('/sprints').send(invalidInput);
-  
+
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('err');
     });
 
     it('should return 400 for invalid input', async () => {
-      const invalidInput = { code: 'TST3', title: "" }; 
-  
+      const invalidInput = { code: 'TST3', title: '' };
+
       const response = await supertest(app).post('/sprints').send(invalidInput);
-  
+
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('err');
     });
@@ -117,7 +117,7 @@ describe('Sprints Controller', () => {
 
       const res = await supertest(app)
         .patch(`/sprints/${existingSprintId}`)
-        .send(updateData)
+        .send(updateData);
 
       expect(res.status).toBe(200);
       expect(res.body.title).toBe('Updated Sprint Title');
@@ -155,21 +155,27 @@ describe('Sprints Controller', () => {
   describe("DELETE '/:id' endpoint", () => {
     it('should delete a sprint', async () => {
       const response = await supertest(app).delete(`/sprints/1`);
-  
+
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(expect.objectContaining([{
-        id: 1,
-        code: "TST1",
-        title: 'Test Sprint 1'
-      }]));
+      expect(response.body).toEqual(
+        expect.objectContaining([
+          {
+            id: 1,
+            code: 'TST1',
+            title: 'Test Sprint 1',
+          },
+        ])
+      );
     });
 
     it('should return 400 if sprint to delete is not found', async () => {
       const nonExistentSprintId = 999;
-      const response = await supertest(app).delete(`/sprints/${nonExistentSprintId}`)
+      const response = await supertest(app).delete(
+        `/sprints/${nonExistentSprintId}`
+      );
 
       expect(response.status).toBe(400);
       expect(response.body).toEqual({ err: 'Sprint not found' });
     });
-  })
+  });
 });

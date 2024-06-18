@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { GiphyFetch } from '@giphy/js-fetch-api';
-import { getGIF } from './gifService'; 
+import { getGIF } from './gifService';
 
 // Mock the GiphyFetch class
 vi.mock('@giphy/js-fetch-api', () => ({
   GiphyFetch: vi.fn().mockImplementation(() => ({
-    random: vi.fn()
-  }))
+    random: vi.fn(),
+  })),
 }));
 
 describe('getGIF', () => {
@@ -29,13 +29,15 @@ describe('getGIF', () => {
       data: {
         images: {
           original: {
-            url: 'https://test-url.com/gif'
-          }
-        }
-      }
+            url: 'https://test-url.com/gif',
+          },
+        },
+      },
     };
 
-    (mockGiphyFetchInstance.random as vi.Mock).mockResolvedValueOnce(mockResponse);
+    (mockGiphyFetchInstance.random as vi.Mock).mockResolvedValueOnce(
+      mockResponse
+    );
 
     const result = await getGIF(mockGiphyFetchInstance);
 
@@ -44,17 +46,18 @@ describe('getGIF', () => {
   });
 
   it('should throw an error when the API call fails', async () => {
-    (mockGiphyFetchInstance.random as vi.Mock).mockRejectedValueOnce(new Error('API Error'));
+    (mockGiphyFetchInstance.random as vi.Mock).mockRejectedValueOnce(
+      new Error('API Error')
+    );
 
     await expect(getGIF(mockGiphyFetchInstance)).rejects.toThrow();
   });
 
-  it.skip('should throw an error if GIPHY_API_KEY is not provided', () => {
-    process.env.GIPHY_API_KEY = '';
+  it.skip('should throw an error if GIPHY_API_KEY is not provided', async () => {
+    delete process.env.GIPHY_API_KEY; // simulate missing environment variable
 
-    expect(() => {
-      delete require.cache[require.resolve('./gifService')];
-      require('./gifService');
-    }).toThrow('Provide GIPHY API KEY in your environment variables.');
+    await expect(getGIF()).rejects.toThrow(
+      'Provide GIPHY API KEY in your environment variables.'
+    );
   });
 });
