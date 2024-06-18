@@ -145,4 +145,27 @@ describe('Templates Controller', () => {
       expect(res.body).toEqual({ err: 'Template not found' });
     });
   });
+
+  describe("DELETE '/:id' endpoint", () => {
+    it('should delete template', async () => {
+      const res = await supertest(app).delete('/templates/1');
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual(
+        expect.objectContaining([
+          {
+            id: 1,
+            text: 'Test Sprint 1',
+          },
+        ])
+      );
+    });
+
+    it('should return 500 if template to delete is not found', async () => {
+      const res = await supertest(app).delete('/templates/999999999');
+
+      expect(res.status).toBe(500);
+      expect(res.body).toHaveProperty('err');
+    });
+  });
 });
