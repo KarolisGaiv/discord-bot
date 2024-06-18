@@ -8,9 +8,16 @@ import { DB } from '../../database';
 export function createTemplatesRouter(db: Kysely<DB>) {
   const router = Router();
 
+  // eslint-disable-next-line consistent-return
   router.get('/', async (req, res) => {
     const parsedInput = schema.parseTemplateSchema(req.query);
     const { id, text } = parsedInput;
+
+    if (!id && !text) {
+      return res
+        .status(400)
+        .json({ err: 'Please provide either id or text query parameter.' });
+    }
 
     try {
       if (id) {
