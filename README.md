@@ -39,7 +39,7 @@ The REST API supports the following endpoints:
    npm install
 3. **Environment Variables**
 
-   ***Important:*** Before running the application, ensure you have set up your API keys and configuration values. 
+   ## IMPORTANT: Before running the application, ensure you have set up your API keys and configuration values. 
 
    - Rename the `.env.example` file to `.env`.
    - Fill in your own API keys and configuration details in the `.env` file.
