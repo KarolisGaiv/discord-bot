@@ -6,9 +6,9 @@ if (!GIPHY_API_KEY) {
   throw new Error('Provide GIPHY API KEY in your environment variables.');
 }
 
-const gf = new GiphyFetch(GIPHY_API_KEY);
+const defaultGf = new GiphyFetch(GIPHY_API_KEY);
 
-export async function getGIF() {
+export async function getGIF(gf: GiphyFetch = defaultGf) {
   try {
     const { data } = await gf.random({ tag: 'fun' });
     return data.images.original.url;
