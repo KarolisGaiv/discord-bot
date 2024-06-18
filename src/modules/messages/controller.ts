@@ -7,7 +7,7 @@ import { DB } from '@/database';
 import { getGIF } from '../gifService/gifService';
 import { getRandomTemplate } from '../message-templates/services';
 import { findSprintByCode } from '../sprints/services';
-import { sendMessageToDiscord } from '@/bot/utils/sendMessage';
+import { sendMessageToDiscord } from '../../bot/utils/sendMessage';
 
 export function createMessagesRouter(db: Kysely<DB>) {
   const router = Router();
@@ -57,8 +57,6 @@ export function createMessagesRouter(db: Kysely<DB>) {
     try {
       const gifUrl = await getGIF();
       const message = await getRandomTemplate(db);
-      const { title } = await findSprintByCode(db, req.body.sprintCode);
-
       // Combine the message body with the fetched gifUrl
       const newMessageData = {
         ...req.body,
@@ -67,8 +65,8 @@ export function createMessagesRouter(db: Kysely<DB>) {
       };
 
       schema.parseFullSchema(newMessageData);
-
       const newMessage = await messages.create(db, newMessageData);
+      const { title } = await findSprintByCode(db, req.body.sprintCode);
 
       await sendMessageToDiscord(newMessageData, title);
       res.status(200).json(newMessage);
