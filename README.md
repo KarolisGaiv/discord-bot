@@ -108,3 +108,50 @@ To delete a sprint using the `/sprints/:sprintId` endpoint, follow these steps:
   DELETE http://localhost:3000/sprints/20
 
 
+**Message Templates Endpoints**
+#### GET /templates
+
+Retrieve information about message templates.
+- **Retrieve template by id:**
+
+  ```http
+  GET http://localhost:3000/templates?id=1
+- **Retrieve template by text:**
+
+  ```http
+  GET http://localhost:3000/templates?text=You nailed it!
+
+#### POST /templates
+- **Endpoint URL:**
+
+  ```http
+  POST http://localhost:3000/templates
+- **Provide the following JSON payload in the request body** Adjust the text value accordingly.
+
+  ```sh
+  {
+  "text": "foo"
+  }
+
+#### PATCH /templates
+- **Endpoint URL:**
+
+  ```http
+  PATCH http://localhost:3000/templates/:templateId
+  Replace `:templateId` with the actual ID of the message template you want to update.
+
+- **Provide the following JSON payload in the request body** Adjust the text value accordingly.
+
+  ```sh
+  {
+    "text": "Updated template text"
+  }
+
+#### DELETE /templates
+To delete a message template using the `/templates/:templateId` endpoint, follow these steps:
+- **Endpoint URL:**
+
+   Replace `:templateId` with the actual ID of the message template you want to delete.
+   
+  ```http
+  DELETE http://localhost:3000/templates/20
