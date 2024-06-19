@@ -24,7 +24,11 @@ export function createMessagesRouter(db: Kysely<DB>) {
     const { username, sprintCode } = parsedInput;
 
     try {
-      if (username) {
+      // if no query provided, get all sprints
+      if (Object.keys(req.query).length === 0) {
+        const messagesList = await messages.findAllMessages(db);
+        res.status(200).json(messagesList);
+      } else if (username) {
         // Fetch messages for the specific user from the database
         const messagesList = await messages.findMessagesByUserName(
           db,
@@ -39,9 +43,7 @@ export function createMessagesRouter(db: Kysely<DB>) {
         );
         res.status(200).json(messagesList);
       } else {
-        // Fetch all messages from the database
-        const messagesList = await messages.findAllMessages(db);
-        res.status(200).json(messagesList);
+        res.status(400).json({ err: 'Incorrect query provided' });
       }
     } catch (err) {
       if (err instanceof z.ZodError) {

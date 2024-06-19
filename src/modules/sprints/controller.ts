@@ -29,7 +29,7 @@ export function createSprintsRouter(db: Kysely<DB>) {
         const sprintInfo = await sprints.findSprintByTitle(db, title as string);
         res.status(200).json(sprintInfo);
       } else {
-        res.status(400).json({err: "Incorrect query provided"})
+        res.status(400).json({ err: 'Incorrect query provided' });
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
