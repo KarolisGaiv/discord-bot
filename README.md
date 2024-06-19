@@ -37,9 +37,15 @@ The REST API supports the following endpoints:
 2. **Install dependencies:**
    ```sh
    npm install
-3.  **Environment Variables**
-   _Fill in your own API keys and configuration values in the .env.example file._ After doing that **rename file to .env**
-4. **Run Database Migrations**
+3. **Environment Variables**
+
+   ## IMPORTANT: Before running the application, ensure you have set up your API keys and configuration values.
+   Or you can contact @plasticcalves on discord to provide with API keys.
+
+   - Rename the `.env.example` file to `.env`.
+   - Fill in your own API keys and configuration details in the `.env` file.
+
+5. **Run Database Migrations**
    ```sh
    npm run migrate:latest
    npm run gen:types
