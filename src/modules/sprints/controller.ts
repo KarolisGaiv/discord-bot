@@ -15,9 +15,12 @@ export function createSprintsRouter(db: Kysely<DB>) {
     };
     const parsedInput = schema.parsePartialInput(query);
     const { code, title } = parsedInput;
-
     try {
-      if (code) {
+      // if no query provided, get all sprints
+      if (Object.keys(req.query).length === 0) {
+        const sprintList = await sprints.findAllSprints(db);
+        res.status(200).json(sprintList);
+      } else if (code) {
         // fetch sprint by code
         const sprintInfo = await sprints.findSprintByCode(db, code as string);
         res.status(200).json(sprintInfo);
@@ -26,9 +29,7 @@ export function createSprintsRouter(db: Kysely<DB>) {
         const sprintInfo = await sprints.findSprintByTitle(db, title as string);
         res.status(200).json(sprintInfo);
       } else {
-        // get all sprints
-        const sprintList = await sprints.findAllSprints(db);
-        res.status(200).json(sprintList);
+        res.status(400).json({err: "Incorrect query provided"})
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
